@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Barn book</string>
+
+    <string name="add_barn_item_content_description">Add new barn item</string>
 </resources>

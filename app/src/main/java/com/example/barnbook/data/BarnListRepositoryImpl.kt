@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.barnbook.domain.BarnItem
 import com.example.barnbook.domain.BarnListRepository
 import java.lang.RuntimeException
+import kotlin.random.Random
 
 object BarnListRepositoryImpl:BarnListRepository {
 
@@ -12,8 +13,8 @@ object BarnListRepositoryImpl:BarnListRepository {
     private val barnList= mutableListOf<BarnItem>()
     private var autoIncrementId=0
 init {
-    for (i in 0 until 10){
-        val item=BarnItem("$i",i,i.toFloat(),true,i)
+    for (i in 0 until 20){
+        val item=BarnItem("$i",i,i.toFloat(),Random.nextBoolean(),i)
         addBarnItem(item)
     }
 }
@@ -26,7 +27,8 @@ init {
     override fun editBarnItem(barnItem: BarnItem) {
         val oldBarnItem= getBarnItem(barnItem.itemId)
         barnList.remove(oldBarnItem)
-        barnList.add(barnItem.itemId,barnItem)
+       addBarnItem(barnItem)
+
     }
 
     override fun getAmount(list: List<BarnItem>): Float {
@@ -44,7 +46,7 @@ init {
     override fun addBarnItem(barnItem: BarnItem) {
         if(barnItem.itemId==BarnItem.UndefindId){
         barnItem.itemId= autoIncrementId++ }
-        barnList.add(barnItem)
+        barnList.add(barnItem.itemId,barnItem)
         updateList()
     }
 
