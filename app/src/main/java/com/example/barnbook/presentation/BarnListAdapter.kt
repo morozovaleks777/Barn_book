@@ -4,21 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.barnbook.R
 import com.example.barnbook.domain.BarnItem
-import java.lang.RuntimeException
 
-class BarnListAdapter:RecyclerView.Adapter<BarnListAdapter.BarnItemViewHolder>() {
+class BarnListAdapter : ListAdapter<BarnItem, BarnListAdapter.BarnItemViewHolder>(BarnItemDiffCallback()){
 
-var barnList= listOf<BarnItem>()
-   set(value) {
-       val callback=BarnListDiffCallback(barnList,value)
-       val diffResult=DiffUtil.calculateDiff(callback)
-       diffResult.dispatchUpdatesTo(this)
-    field=value
-}
+
 var onBarnItemLongClickListener:((BarnItem) -> Unit)? =null
 var onBarnItemClickListener:((BarnItem) -> Unit)? =null
 
@@ -35,7 +28,7 @@ val layout=when(viewType){
     }
 
     override fun onBindViewHolder(holder: BarnItemViewHolder, position: Int) {
-        val barnItem=barnList[position]
+        val barnItem=getItem(position)
         holder.tvName.text=barnItem.name
         holder.tvCount.text=barnItem.count.toString()
 
@@ -49,16 +42,14 @@ true
     }
 
     override fun getItemViewType(position: Int): Int {
-        var item=barnList[position]
+        val item=getItem(position)
         return if (!item.enabled)  {VIEW_TYPE_ENABLED}
         else {VIEW_TYPE_DISABLED}
 
 
 
     }
-    override fun getItemCount(): Int {
-        return barnList.size
-    }
+
 
 
     class BarnItemViewHolder( val view: View):RecyclerView.ViewHolder(view){

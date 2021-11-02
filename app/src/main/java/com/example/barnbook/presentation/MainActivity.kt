@@ -19,7 +19,7 @@ private lateinit var barnListAdapter : BarnListAdapter
         viewModel=ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.barnList.observe(this){
             Log.d("Test","$it")
-            barnListAdapter.barnList=it
+            barnListAdapter.submitList(it)
         }
 
     }
@@ -58,7 +58,7 @@ private lateinit var barnListAdapter : BarnListAdapter
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = barnListAdapter.barnList[viewHolder.adapterPosition]
+                val item = barnListAdapter.currentList[viewHolder.adapterPosition]
                 viewModel.deleteBarnItem(item)
             }
         }

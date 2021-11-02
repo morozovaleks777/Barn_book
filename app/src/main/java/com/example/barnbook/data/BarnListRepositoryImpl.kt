@@ -8,9 +8,8 @@ import java.lang.RuntimeException
 import kotlin.random.Random
 
 object BarnListRepositoryImpl:BarnListRepository {
-
+    private val barnList = sortedSetOf<BarnItem>({ o1, o2 -> o1.itemId.compareTo(o2.itemId) })
     private val barnListLD=MutableLiveData<List<BarnItem>>()
-    private val barnList= mutableListOf<BarnItem>()
     private var autoIncrementId=0
 init {
     for (i in 0 until 20){
@@ -46,7 +45,7 @@ init {
     override fun addBarnItem(barnItem: BarnItem) {
         if(barnItem.itemId==BarnItem.UndefindId){
         barnItem.itemId= autoIncrementId++ }
-        barnList.add(barnItem.itemId,barnItem)
+        barnList.add(barnItem)
         updateList()
     }
 
