@@ -5,9 +5,9 @@ data class BarnItem(
     val count:Int,
     val price:Float,
     val enabled:Boolean,
-    var itemId: Int = UndefindId
+    var itemId: Int = UNDEFINED_ID
 ){
     companion object{
-        const val UndefindId=-1
+        const val UNDEFINED_ID=-1
     }
 }

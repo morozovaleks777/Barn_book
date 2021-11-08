@@ -1,12 +1,15 @@
 package com.example.barnbook.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.barnbook.R
+import com.example.barnbook.presentation.BarnItemActivity.Companion.newIntentAddItem
+import com.example.barnbook.presentation.BarnItemActivity.Companion.newIntentEditItem
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,6 +23,11 @@ private lateinit var barnListAdapter : BarnListAdapter
         viewModel.barnList.observe(this){
             Log.d("Test","$it")
             barnListAdapter.submitList(it)
+        }
+        val buttonAddItem=findViewById<FloatingActionButton>(R.id.button_add_barn_item)
+        buttonAddItem.setOnClickListener {
+            val intent= newIntentAddItem(this)
+            startActivity(intent)
         }
 
     }
@@ -74,6 +82,8 @@ private lateinit var barnListAdapter : BarnListAdapter
     private fun setupClickListener() {
         barnListAdapter.onBarnItemClickListener = {
            Log.d("Test", it.toString())
+            val intent= newIntentEditItem(this,it.itemId)
+            startActivity(intent)
         }
     }
 }

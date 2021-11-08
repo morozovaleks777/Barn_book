@@ -43,7 +43,7 @@ init {
     }
 
     override fun addBarnItem(barnItem: BarnItem) {
-        if(barnItem.itemId==BarnItem.UndefindId){
+        if(barnItem.itemId==BarnItem.UNDEFINED_ID){
         barnItem.itemId= autoIncrementId++ }
         barnList.add(barnItem)
         updateList()
