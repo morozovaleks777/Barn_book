@@ -13,6 +13,7 @@ import java.lang.Exception
 class BarnItemViewModel:ViewModel() {
 
     private val repository= BarnListRepositoryImpl
+
     private val editBarnItemUseCase= EditBarnItemUseCase(repository)
     private val addBarnItemUseCase= AddBarnItemUseCase(repository)
     private val getBarnItemUseCase=GetBarnItemUseCase(repository)
@@ -40,16 +41,28 @@ class BarnItemViewModel:ViewModel() {
         _barnItem.value=item
     }
 
-    fun addBarnItem(inputName:String?,inputCount:String?){
-        val name=parseInputName(inputName)
-        val count=parseInputCount(inputCount)
-        val fieldsValid=validateInput(name,count)
-        if(fieldsValid){
-            val barnItem=BarnItem(name,count,0F,true)
+//    fun addBarnItem(inputName:String?,inputCount:String?){
+//        val name=parseInputName(inputName)
+//        val count=parseInputCount(inputCount)
+//        val fieldsValid=validateInput(name,count)
+//        if(fieldsValid){
+//            val barnItem=BarnItem(name=name,count=count,price = 1f,enabled = true)
+//            addBarnItemUseCase.addBarnItem(barnItem)
+//            finishWork()
+//        }
+//    }
+    fun addBarnItem(inputName: String?, inputCount: String?) {
+        val name = parseInputName(inputName)
+        val count = parseInputCount(inputCount)
+        val fieldsValid = validateInput(name, count)
+        if (fieldsValid) {
+            val barnItem = BarnItem(name, count, true)
             addBarnItemUseCase.addBarnItem(barnItem)
             finishWork()
         }
     }
+
+
 
     fun editBarnItem(inputName:String?,inputCount:String?){
         val name=parseInputName(inputName)
@@ -90,6 +103,7 @@ class BarnItemViewModel:ViewModel() {
         }
         return result
     }
+
     public fun resetErrorInputName(){
         _errorInputName.value=false
     }

@@ -13,7 +13,7 @@ object BarnListRepositoryImpl:BarnListRepository {
     private var autoIncrementId=0
 init {
     for (i in 0 until 20){
-        val item=BarnItem("$i",i,i.toFloat(),Random.nextBoolean(),i)
+        val item=BarnItem(" name $i",i,Random.nextBoolean())
         addBarnItem(item)
     }
 }
