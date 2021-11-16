@@ -13,7 +13,7 @@ object BarnListRepositoryImpl:BarnListRepository {
     private var autoIncrementId=0
 init {
     for (i in 0 until 20){
-        val item=BarnItem(" name $i",i,Random.nextBoolean())
+        val item=BarnItem(" name ",0, 0.0F ,false)
         addBarnItem(item)
     }
 }
@@ -31,7 +31,13 @@ init {
     }
 
     override fun getAmount(list: List<BarnItem>): Float {
-        TODO("Not yet implemented")
+        var sum=0F
+
+        for (i in 0 until list.size-1){
+           sum+= list[i].count*list[i].price
+
+        }
+        return sum
     }
 
     override fun getBarnItem(ItemId: Int): BarnItem {

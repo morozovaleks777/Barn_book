@@ -2,37 +2,62 @@ package com.example.barnbook.presentation
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.barnbook.R
+import com.example.barnbook.databinding.ActivityMainBinding
 import com.example.barnbook.presentation.BarnItemActivity.Companion.newIntentAddItem
 import com.example.barnbook.presentation.BarnItemActivity.Companion.newIntentEditItem
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),BarnItemFragment.OnEditingFinishedListener {
+    private val viewBinding: ActivityMainBinding by viewBinding()
+    private var barnItemContainer: FragmentContainerView? = null
 
-private lateinit var barnListAdapter : BarnListAdapter
-   private lateinit var viewModel: MainViewModel
+    private lateinit var barnListAdapter: BarnListAdapter
+    private lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        barnItemContainer = viewBinding.itemContainer
         setupRecyclerView()
-        viewModel=ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.barnList.observe(this){
-            Log.d("Test","$it")
+        setupTotalFragment()
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.barnList.observe(this) {
+            Log.d("Test", "$it")
             barnListAdapter.submitList(it)
         }
-        val buttonAddItem=findViewById<FloatingActionButton>(R.id.button_add_barn_item)
+        val buttonAddItem = viewBinding.buttonAddBarnItem
         buttonAddItem.setOnClickListener {
-            val intent= newIntentAddItem(this)
-            startActivity(intent)
+            if (isOnePaneMode()) {
+                val intent = newIntentAddItem(this)
+                startActivity(intent)
+            } else launchFragment(BarnItemFragment.newInstanceAddItem())
         }
 
     }
-    private fun setupRecyclerView(){
-        val rvBarnList=findViewById<RecyclerView>(R.id.rv_barn_list)
+
+    private fun isOnePaneMode(): Boolean {
+
+        return barnItemContainer == null
+    }
+
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.item_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun setupRecyclerView() {
+        val rvBarnList = viewBinding.rvBarnList
         with(rvBarnList) {
             barnListAdapter = BarnListAdapter()
             adapter = barnListAdapter
@@ -46,12 +71,12 @@ private lateinit var barnListAdapter : BarnListAdapter
                 BarnListAdapter.MAX_POOL_SIZE
             )
         }
-       setupLongClickListener()
-       setupClickListener()
-        setupswipeListener(rvBarnList)
+        setupLongClickListener()
+        setupClickListener()
+        setupSwipeListener(rvBarnList)
     }
 
-    private fun setupswipeListener(rvBarnList: RecyclerView?) {
+    private fun setupSwipeListener(rvBarnList: RecyclerView?) {
         val callback = object :
             ItemTouchHelper.SimpleCallback(
                 0,
@@ -79,11 +104,28 @@ private lateinit var barnListAdapter : BarnListAdapter
             viewModel.changeEnableState(it)
         }
     }
+
     private fun setupClickListener() {
         barnListAdapter.onBarnItemClickListener = {
-           Log.d("Test", it.toString())
-            val intent= newIntentEditItem(this,it.itemId)
-            startActivity(intent)
+            if (isOnePaneMode()) {
+                val intent = newIntentEditItem(this, it.itemId)
+                startActivity(intent)
+            } else {
+                launchFragment(BarnItemFragment.newInstanceEditItem(it.itemId))
+            }
         }
     }
-}
+
+    override fun onEditingFinished() {
+        Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
+    }
+    private fun setupTotalFragment(){
+        if(isOnePaneMode()){
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.total_fragment_container,TotalBillFragment())
+            .addToBackStack(null)
+            .commit()
+      }
+    }
+ }

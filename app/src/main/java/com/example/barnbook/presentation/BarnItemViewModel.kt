@@ -41,36 +41,26 @@ class BarnItemViewModel:ViewModel() {
         _barnItem.value=item
     }
 
-//    fun addBarnItem(inputName:String?,inputCount:String?){
-//        val name=parseInputName(inputName)
-//        val count=parseInputCount(inputCount)
-//        val fieldsValid=validateInput(name,count)
-//        if(fieldsValid){
-//            val barnItem=BarnItem(name=name,count=count,price = 1f,enabled = true)
-//            addBarnItemUseCase.addBarnItem(barnItem)
-//            finishWork()
-//        }
-//    }
-    fun addBarnItem(inputName: String?, inputCount: String?) {
+    fun addBarnItem(inputName: String?, inputCount: String?,inputPrice: String?) {
         val name = parseInputName(inputName)
         val count = parseInputCount(inputCount)
-        val fieldsValid = validateInput(name, count)
+        val price = parseInputPrice(inputPrice )
+        val fieldsValid = validateInput(name, count,price)
         if (fieldsValid) {
-            val barnItem = BarnItem(name, count, true)
+            val barnItem = BarnItem(name, count, price,true)
             addBarnItemUseCase.addBarnItem(barnItem)
             finishWork()
         }
     }
 
-
-
-    fun editBarnItem(inputName:String?,inputCount:String?){
+    fun editBarnItem(inputName:String?,inputCount:String?,inputPrice: String?){
         val name=parseInputName(inputName)
         val count=parseInputCount(inputCount)
-        val fieldsValid=validateInput(name,count)
+        val price=parseInputPrice(inputPrice )
+        val fieldsValid=validateInput(name,count,price)
         if(fieldsValid){
             _barnItem.value?.let {
-                val item = it.copy(name = name, count = count)
+                val item = it.copy(name = name, count = count,price = price)
 
                 editBarnItemUseCase.editBarnItem(item)
                 finishWork()
@@ -90,8 +80,16 @@ class BarnItemViewModel:ViewModel() {
             0
         }
     }
+    private fun parseInputPrice(inputPrice: String?):Float{
+        return  try {
+            inputPrice?.trim()?.toFloat() ?:0F
+        }
+        catch (e:Exception){
+            0F
+        }
+    }
 
-    private fun validateInput(inputName:String,inputCount:Int):Boolean{
+    private fun validateInput(inputName:String,inputCount:Int,inputPrice: Float):Boolean{
         var result=true
         if(inputName.isBlank()) {
            _errorInputName.value=true
@@ -101,13 +99,17 @@ class BarnItemViewModel:ViewModel() {
             _errorInputCount.value=true
              result =false
         }
+        if(inputPrice<=0){
+            _errorInputCount.value=true
+            result =false
+        }
         return result
     }
 
-    public fun resetErrorInputName(){
+    fun resetErrorInputName(){
         _errorInputName.value=false
     }
-    public fun resetErrorInputCount(){
+    fun resetErrorInputCount(){
         _errorInputCount.value=false
     }
     private fun finishWork(){

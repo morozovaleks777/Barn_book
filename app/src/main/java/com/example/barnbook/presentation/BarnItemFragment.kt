@@ -1,5 +1,6 @@
 package com.example.barnbook.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,18 +12,26 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.barnbook.R
+import com.example.barnbook.databinding.FragmentBarnItemBinding
 import com.example.barnbook.domain.BarnItem
 import com.google.android.material.textfield.TextInputLayout
 
 
 class BarnItemFragment : Fragment() {
 
+    private  var _binding: FragmentBarnItemBinding?=null
+    private val binding:FragmentBarnItemBinding
+        get() =_binding?:throw java.lang.RuntimeException("FragmentBarnItemBinding = null")
     private lateinit var viewModel: BarnItemViewModel
 
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
+
     private lateinit var tilName: TextInputLayout
+    private lateinit var tilPrice: TextInputLayout
     private lateinit var tilCount: TextInputLayout
     private lateinit var etName: EditText
     private lateinit var etCount: EditText
+    private lateinit var etPrice: EditText
     private lateinit var buttonSave: Button
 
     private var screenMode: String = MODE_UNKNOWN
@@ -32,18 +41,28 @@ class BarnItemFragment : Fragment() {
         parseParams()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if(context is OnEditingFinishedListener){
+            onEditingFinishedListener=context
+        }else{
+            throw RuntimeException("activity must implement OnEditingFinishedListener")
+        }
+    }
         override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-        ): View? {
-            return inflater.inflate(R.layout.fragment_barn_item, container, false)
+        ): View {
+
+            _binding= FragmentBarnItemBinding.inflate(inflater,container,false)
+            return binding.root
         }
 
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
             viewModel = ViewModelProvider(this)[BarnItemViewModel::class.java]
-            initViews(view)
+            initViews()
             addTextChangeListeners()
             launchRightMode()
             observeViewModel()
@@ -103,20 +122,22 @@ class BarnItemFragment : Fragment() {
             })
         }
 
+
         private fun launchEditMode() {
             viewModel.getBarnItem(barnItemId)
             viewModel.barnItem.observe(viewLifecycleOwner) {
                 etName.setText(it.name)
                 etCount.setText(it.count.toString())
+                etPrice.setText(it.price.toString())
             }
             buttonSave.setOnClickListener {
-                viewModel.editBarnItem(etName.text?.toString(), etCount.text?.toString())
+                viewModel.editBarnItem(etName.text?.toString(), etCount.text?.toString(),etPrice.text.toString())
             }
         }
 
         private fun launchAddMode() {
             buttonSave.setOnClickListener {
-                viewModel.addBarnItem(etName.text?.toString(), etCount.text?.toString())
+                viewModel.addBarnItem(etName.text?.toString(), etCount.text?.toString(),etPrice.text?.toString())
             }
         }
 
@@ -138,12 +159,14 @@ class BarnItemFragment : Fragment() {
             }
         }
 
-        private fun initViews(view: View) {
-            tilName = view.findViewById(R.id.til_name)
-            tilCount = view.findViewById(R.id.til_count)
-            etName = view.findViewById(R.id.et_name)
-            etCount = view.findViewById(R.id.et_count)
-            buttonSave = view.findViewById(R.id.save_button)
+        private fun initViews() {
+           tilPrice=binding.tilPrice
+            tilName = binding.tilName
+            tilCount = binding.tilCount
+            etPrice=binding.etPrice
+            etName = binding.etName
+            etCount = binding.etCount
+            buttonSave = binding.saveButton
         }
 
         companion object {
@@ -173,4 +196,12 @@ class BarnItemFragment : Fragment() {
                 }
             }
         }
+    interface OnEditingFinishedListener{
+        fun onEditingFinished()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding=null
+    }
     }

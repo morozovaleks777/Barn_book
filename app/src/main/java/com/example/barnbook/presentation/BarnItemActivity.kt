@@ -7,16 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.barnbook.R
 import com.example.barnbook.domain.BarnItem
 
-class BarnItemActivity : AppCompatActivity() {
+class BarnItemActivity : AppCompatActivity(),BarnItemFragment.OnEditingFinishedListener {
 
-    private var screenMode = BarnItemActivity.MODE_UNKNOWN
+    private var screenMode = MODE_UNKNOWN
     private var barnItemId = BarnItem.UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_barn_item)
         checkIntent()
-        launchRightMode()
+        if(savedInstanceState==null){
+        launchRightMode()}
     }
 
     private fun launchRightMode() {
@@ -26,7 +27,7 @@ class BarnItemActivity : AppCompatActivity() {
             else      -> throw RuntimeException("Unknown screen mode $screenMode")
         }
         supportFragmentManager.beginTransaction()
-            .add(R.id.barn_item_container, fragment)
+            .replace(R.id.barn_item_container, fragment)
             .commit()
     }
 
@@ -68,5 +69,9 @@ class BarnItemActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_BARN_ITEM_ID,barnItemId)
             return intent
         }
+    }
+
+    override fun onEditingFinished() {
+     finish()
     }
 }

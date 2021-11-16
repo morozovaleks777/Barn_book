@@ -1,5 +1,6 @@
 package com.example.barnbook.presentation
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -24,10 +25,12 @@ val layout=when(viewType){
         return BarnItemViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: BarnItemViewHolder, position: Int) {
         val barnItem=getItem(position)
         holder.tvName.text=barnItem.name
-        holder.tvCount.text=barnItem.count.toString()
+        holder.tvCount.text= barnItem.count.toString()
+        holder.tvPrice.text= barnItem.price.toString()
 
         holder.view.setOnLongClickListener {
             onBarnItemLongClickListener?.invoke(barnItem)

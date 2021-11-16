@@ -3,7 +3,7 @@ package com.example.barnbook.domain
 data class BarnItem(
     val name:String,
     val count:Int,
-  //  val price:Float,
+    val price:Float=0.0F,
     val enabled:Boolean,
     var itemId: Int = UNDEFINED_ID
 ){
