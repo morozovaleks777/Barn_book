@@ -11,7 +11,7 @@ import com.example.barnbook.domain.BarnItem
 interface BarnListDao {
 
     @Query("SELECT * FROM barn_items")
-fun getBarnItem():LiveData<List<BarnItemDBModel>>
+fun getBarnItemList():LiveData<List<BarnItemDBModel>>
 
 @Insert(onConflict = OnConflictStrategy.REPLACE)
 fun addBarnItem(barnItemDBModel: BarnItemDBModel)
