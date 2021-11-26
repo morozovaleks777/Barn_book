@@ -1,5 +1,7 @@
 package com.example.barnbook.presentation
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,9 +12,9 @@ import com.example.barnbook.domain.EditBarnItemUseCase
 import com.example.barnbook.domain.GetBarnItemUseCase
 import java.lang.Exception
 
-class BarnItemViewModel:ViewModel() {
+class BarnItemViewModel(application: Application):AndroidViewModel(application) {
 
-    private val repository= BarnListRepositoryImpl
+    private val repository= BarnListRepositoryImpl(application)
 
     private val editBarnItemUseCase= EditBarnItemUseCase(repository)
     private val addBarnItemUseCase= AddBarnItemUseCase(repository)

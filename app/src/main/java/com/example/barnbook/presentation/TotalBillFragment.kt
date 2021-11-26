@@ -36,7 +36,7 @@ private lateinit var textButton:TextView
  viewModel.barnList.observe(viewLifecycleOwner,{
 
    val sum=  viewModel.getAmountOfExpenses(it)
-     ("total cost : " +sum.toString()).also { totalSumText.text = it }
+     ("total cost : $sum").also { totalSumText.text = it }
  })
 
 
