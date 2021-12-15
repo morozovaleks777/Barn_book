@@ -14,11 +14,11 @@ interface BarnListDao {
 fun getBarnItemList():LiveData<List<BarnItemDBModel>>
 
 @Insert(onConflict = OnConflictStrategy.REPLACE)
-fun addBarnItem(barnItemDBModel: BarnItemDBModel)
+suspend fun addBarnItem(barnItemDBModel: BarnItemDBModel)
 
 @Query("DELETE FROM barn_items WHERE itemId=:barnItemId")
-fun deleteBarnItem(barnItemId:Int)
+suspend fun deleteBarnItem(barnItemId:Int)
 
 @Query("SELECT * FROM barn_items WHERE itemId=:barnItemId LIMIT 1")
-fun getBarnItem(barnItemId:Int):BarnItemDBModel
+suspend fun getBarnItem(barnItemId:Int):BarnItemDBModel
 }

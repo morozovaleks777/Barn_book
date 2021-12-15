@@ -1,6 +1,7 @@
 package com.example.barnbook.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,23 +26,22 @@ private lateinit var textButton:TextView
         return inflater.inflate(R.layout.fragment_total_bill, container, false)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val totalSumText=viewBinding.textView
-        textButton=viewBinding.tvButton
-        textButton.setOnClickListener{
-            Toast.makeText(requireContext(),"go to next fragment",Toast.LENGTH_SHORT).show()
+        val timeText = viewBinding.textView2
+        val totalSumText = viewBinding.textView
+        textButton = viewBinding.tvButton
+        textButton.setOnClickListener {
+            Toast.makeText(requireContext(), "go to next fragment", Toast.LENGTH_SHORT).show()
+            Log.d("Test", "go to next fragment")
         }
         viewModel = ViewModelProvider(this)[TotalBillViewModel::class.java]
- viewModel.barnList.observe(viewLifecycleOwner,{
+        viewModel.barnList.observe(viewLifecycleOwner, {
 
-   val sum=  viewModel.getAmountOfExpenses(it)
-     ("total cost : $sum").also { totalSumText.text = it }
- })
-
+            val sum = viewModel.getAmountOfExpenses(it)
+            ("total cost : $sum").also { totalSumText.text = it } })
 
 
-
-    }
-
+   }
 }

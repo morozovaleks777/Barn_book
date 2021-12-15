@@ -1,15 +1,16 @@
 package com.example.barnbook.presentation
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.barnbook.data.BarnListRepositoryImpl
 import com.example.barnbook.domain.AddBarnItemUseCase
 import com.example.barnbook.domain.BarnItem
 import com.example.barnbook.domain.EditBarnItemUseCase
 import com.example.barnbook.domain.GetBarnItemUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class BarnItemViewModel(application: Application):AndroidViewModel(application) {
@@ -36,11 +37,11 @@ class BarnItemViewModel(application: Application):AndroidViewModel(application) 
     val closeScreen: LiveData<Unit>
         get() = _closeScreen
 
-
-
     fun getBarnItem(barnItemId:Int){
-        val item=getBarnItemUseCase.getBarnItem(barnItemId)
-        _barnItem.value=item
+        viewModelScope.launch {
+            val item = getBarnItemUseCase.getBarnItem(barnItemId)
+            _barnItem.value=item
+        }
     }
 
     fun addBarnItem(inputName: String?, inputCount: String?,inputPrice: String?) {
@@ -49,8 +50,11 @@ class BarnItemViewModel(application: Application):AndroidViewModel(application) 
         val price = parseInputPrice(inputPrice )
         val fieldsValid = validateInput(name, count,price)
         if (fieldsValid) {
+            viewModelScope.launch {
             val barnItem = BarnItem(name, count, price,true)
-            addBarnItemUseCase.addBarnItem(barnItem)
+
+                addBarnItemUseCase.addBarnItem(barnItem)
+            }
             finishWork()
         }
     }
@@ -62,10 +66,11 @@ class BarnItemViewModel(application: Application):AndroidViewModel(application) 
         val fieldsValid=validateInput(name,count,price)
         if(fieldsValid){
             _barnItem.value?.let {
+                viewModelScope.launch {
                 val item = it.copy(name = name, count = count,price = price)
-
-                editBarnItemUseCase.editBarnItem(item)
-                finishWork()
+                    editBarnItemUseCase.editBarnItem(item)
+                    finishWork()
+                }
             }
         }
     }
@@ -117,4 +122,6 @@ class BarnItemViewModel(application: Application):AndroidViewModel(application) 
     private fun finishWork(){
         _closeScreen.value=Unit
     }
+
+
 }

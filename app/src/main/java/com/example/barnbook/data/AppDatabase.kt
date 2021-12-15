@@ -27,7 +27,6 @@ INSTANCE?.let {
                 application,
                 AppDatabase::class.java,
                 DB_NAME)
-                .allowMainThreadQueries()
                 .build()
             INSTANCE=db
             return db

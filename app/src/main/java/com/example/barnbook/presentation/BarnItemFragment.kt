@@ -160,6 +160,7 @@ class BarnItemFragment : Fragment() {
         }
 
         private fun initViews() {
+
            tilPrice=binding.tilPrice
             tilName = binding.tilName
             tilCount = binding.tilCount
