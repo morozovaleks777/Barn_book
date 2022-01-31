@@ -10,12 +10,12 @@
         android:id="@+id/rv_barn_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/guidelineMiddleHorizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline_middle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_barn_enabled" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_barn_enabled"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_add_barn_item"
@@ -26,29 +26,22 @@
         android:clickable="true"
         android:contentDescription="@string/add_barn_item_content_description"
         android:focusable="true"
-        app:layout_constraintBottom_toTopOf="@id/guidelineMiddleHorizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline_middle"
         app:srcCompat="@drawable/ic_add" />
-
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineMiddleHorizontal"
+        android:id="@+id/guideline_middle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.82" />
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"
+        />
 
     <androidx.fragment.app.FragmentContainerView
-
-        android:id="@+id/total_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="102dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/item_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="@id/guideline_middle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineMiddleHorizontal"
-        android:layout_margin="8dp"
-        android:background="@color/purple_200"
-        android:name="com.example.barnbook.presentation.TotalBillFragment"
-        tools:layout="@layout/fragment_total_bill" />
-
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
