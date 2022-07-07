@@ -26,6 +26,8 @@ class BarnItemActivity : AppCompatActivity(),BarnItemFragment.OnEditingFinishedL
             MODE_ADD  -> BarnItemFragment.newInstanceAddItem()
             else      -> throw RuntimeException("Unknown screen mode $screenMode")
         }
+
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.barn_item_container, fragment)
             .commit()
